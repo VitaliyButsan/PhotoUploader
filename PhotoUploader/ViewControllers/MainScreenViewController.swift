@@ -11,8 +11,26 @@ import Photos
 
 struct Constants {
     static let cellIdentifier: String = "Cell"
-    static let cellHeight: Double = 100.0
-    static let cellWidth: Double = 100.0
+    static let defaultCount: Int = 0
+    static let minCellSpacing: CGFloat = 3.0
+    static let defaultSectionLeadingIndent: CGFloat = 4.0
+    static let defaultSectionTrailingIndent: CGFloat = 4.0
+    static let sectionTopIndent: CGFloat = 4.0
+    static let sectionBottomIndent: CGFloat = 4.0
+}
+
+
+enum OrientationMode: Int {
+    case Portrait = 3
+    case Landscape = 5
+}
+
+struct Variables {
+    static var numberOfCells: Int = OrientationMode.Portrait.rawValue
+    static var numberOfCellsSpacings: Int = OrientationMode.Portrait.rawValue
+    static var sectionLeadingIndent: CGFloat = Constants.defaultSectionLeadingIndent
+    static var sectionTrailingIndent: CGFloat = Constants.defaultSectionTrailingIndent
+    static var sectionLeadingTrailingIndent: CGFloat = Constants.defaultSectionLeadingIndent + Constants.defaultSectionTrailingIndent
 }
 
 class MainScreenViewController: UICollectionViewController {
@@ -35,7 +53,7 @@ class MainScreenViewController: UICollectionViewController {
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photoViewModel.imageResult?.count ?? 0
+        return photoViewModel.imageResult?.count ?? Constants.defaultCount
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -44,6 +62,39 @@ class MainScreenViewController: UICollectionViewController {
         return cell
     }
 
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        collectionView.reloadData()
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return Constants.minCellSpacing
+    }
+    
+    override func willRotate(to toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval) {
+        
+        let screenHeight = UIScreen.main.bounds.height
+        let screenWidth = UIScreen.main.bounds.width
+        
+        // Determine iPad orientation
+        if screenHeight > screenWidth {
+            Variables.numberOfCells = OrientationMode.Landscape.rawValue
+            Variables.numberOfCellsSpacings = OrientationMode.Landscape.rawValue
+            collectionView.reloadData()
+        } else {
+            Variables.numberOfCells = OrientationMode.Portrait.rawValue
+            Variables.numberOfCellsSpacings = OrientationMode.Portrait.rawValue
+            collectionView.reloadData()
+        }
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        let inset = UIEdgeInsets(top: Constants.sectionTopIndent,
+                                 left: Variables.sectionLeadingIndent,
+                                 bottom: Constants.sectionBottomIndent,
+                                 right: Variables.sectionTrailingIndent)
+        return inset
+    }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
@@ -51,7 +102,24 @@ class MainScreenViewController: UICollectionViewController {
 extension MainScreenViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: Constants.cellHeight, height: Constants.cellWidth)
+        
+        let orientation = UIApplication.shared.statusBarOrientation
+        
+        // Determine iPhone orientation
+        if orientation == .landscapeRight {
+            Variables.numberOfCells = OrientationMode.Landscape.rawValue
+            Variables.numberOfCellsSpacings = OrientationMode.Landscape.rawValue
+        } else if orientation == .landscapeLeft {
+            Variables.numberOfCells = OrientationMode.Landscape.rawValue
+            Variables.numberOfCellsSpacings = OrientationMode.Landscape.rawValue
+        } else {
+            Variables.numberOfCells = OrientationMode.Portrait.rawValue
+            Variables.numberOfCellsSpacings = OrientationMode.Portrait.rawValue
+        }
+
+        let cellWidth: CGFloat = (view.frame.width - Variables.sectionLeadingTrailingIndent - Constants.minCellSpacing * CGFloat(Variables.numberOfCellsSpacings)) / CGFloat(Variables.numberOfCells)
+
+        return CGSize(width: cellWidth, height: cellWidth)
     }
     
 }
