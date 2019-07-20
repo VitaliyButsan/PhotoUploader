@@ -45,12 +45,15 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         let image = Imgur.imageStorage[index]
         print("MyName on phone:", image.name)
         
-        Imgur.requestWith(image: image.data, name: image.name) { isLoaded in
-            if isLoaded {
-                //self.spinner.stopAnimating()
-            } else {
-                // setup Alert!
+        let dispatchGroup = DispatchGroup()
+        //dispatchGroup.enter()
+            Imgur.requestWith(image: image.data, name: image.name) { isLoaded in
+                if isLoaded {
+                    //self.spinner.stopAnimating()
+                    //dispatchGroup.leave()
+                } else {
+                    // setup Alert!
+                }
             }
-        }
     }
 }
