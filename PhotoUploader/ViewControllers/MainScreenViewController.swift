@@ -52,22 +52,17 @@ class MainScreenViewController: UICollectionViewController {
         }
     }
 
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photoViewModel.imageResult?.count ?? Constants.defaultCount
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.cellIdentifier, for: indexPath) as! PhotoCollectionViewCell
-        cell.asset = photoViewModel.imageResult?[indexPath.row] as? PHAsset
-        return cell
-    }
-
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionView.reloadData()
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return Constants.minCellSpacing
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as! PhotoCollectionViewCell
+        cell.post(index: indexPath.row)
     }
     
     override func willRotate(to toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval) {
@@ -95,21 +90,31 @@ class MainScreenViewController: UICollectionViewController {
                                  right: Variables.sectionTrailingIndent)
         return inset
     }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return photoViewModel.imageResult?.count ?? Constants.defaultCount
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.cellIdentifier, for: indexPath) as! PhotoCollectionViewCell
+        
+        cell.rowIndex = indexPath.row
+        cell.asset = photoViewModel.imageResult?[indexPath.row] as? PHAsset
+        
+        return cell
+    }
+
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
 
 extension MainScreenViewController: UICollectionViewDelegateFlowLayout {
     
+    // cell size
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let orientation = UIApplication.shared.statusBarOrientation
-        
         // Determine iPhone orientation
-        if orientation == .landscapeRight {
-            Variables.numberOfCells = OrientationMode.Landscape.rawValue
-            Variables.numberOfCellsSpacings = OrientationMode.Landscape.rawValue
-        } else if orientation == .landscapeLeft {
+        if UIDevice.current.orientation.isLandscape {
             Variables.numberOfCells = OrientationMode.Landscape.rawValue
             Variables.numberOfCellsSpacings = OrientationMode.Landscape.rawValue
         } else {

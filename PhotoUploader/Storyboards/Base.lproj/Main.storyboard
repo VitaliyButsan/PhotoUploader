@@ -34,14 +34,20 @@
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="X4o-DL-qcb">
                                             <rect key="frame" x="0.0" y="0.0" width="112" height="115"/>
                                         </imageView>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="g3j-rb-SZm">
+                                            <rect key="frame" x="37.5" y="39" width="37" height="37"/>
+                                            <color key="color" red="0.99981552360000003" green="0.023083530389999999" blue="0.1036606071" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </activityIndicatorView>
                                     </subviews>
                                 </view>
                                 <color key="backgroundColor" red="0.7023863962246002" green="0.73528593886490623" blue="0.81848826142131981" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
+                                    <constraint firstItem="g3j-rb-SZm" firstAttribute="centerX" secondItem="X4o-DL-qcb" secondAttribute="centerX" id="Kvc-sc-FsK"/>
                                     <constraint firstItem="X4o-DL-qcb" firstAttribute="top" secondItem="dgk-Qx-INf" secondAttribute="top" id="NCV-tw-ze3"/>
                                     <constraint firstItem="X4o-DL-qcb" firstAttribute="leading" secondItem="dgk-Qx-INf" secondAttribute="leading" id="TGK-MO-m3D"/>
                                     <constraint firstAttribute="trailing" secondItem="X4o-DL-qcb" secondAttribute="trailing" id="VAC-aU-JvT"/>
                                     <constraint firstAttribute="bottom" secondItem="X4o-DL-qcb" secondAttribute="bottom" id="h9C-A0-sa8"/>
+                                    <constraint firstItem="g3j-rb-SZm" firstAttribute="centerY" secondItem="X4o-DL-qcb" secondAttribute="centerY" id="hyL-Ge-U3n"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -50,6 +56,7 @@
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outlet property="presentImageView" destination="X4o-DL-qcb" id="959-hR-bOL"/>
+                                    <outlet property="spinner" destination="g3j-rb-SZm" id="Flb-Q6-8B7"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>

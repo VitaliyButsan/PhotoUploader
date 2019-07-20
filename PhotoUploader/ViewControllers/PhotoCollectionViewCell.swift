@@ -8,28 +8,48 @@
 
 import UIKit
 import Photos
+import Alamofire
 
 class PhotoCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var presentImageView: UIImageView!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        setupViews()
-    }
-    
-    func setupViews() {
-        backgroundColor = .brown
-    }
-    
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
+    var rowIndex: Int?
+
+    // get photo from asset
     var asset: PHAsset? {
         didSet {
             if let hashAsset = asset {
                 PHImageManager.default().requestImage(for: hashAsset, targetSize: presentImageView.frame.size, contentMode: .aspectFill, options: nil) { (image: UIImage?, dict: [AnyHashable:Any]?) -> Void in
                         if let hashImage = image {
+                            self.presentImageView.image = nil
                             self.presentImageView.image = hashImage
+                            self.addImageToStorage(image: hashImage)
                         }
                 }
+            }
+        }
+    }
+
+    private func addImageToStorage(image: UIImage) {
+        // check, is exist element with cpecific name in storage. If no exist, add more one.
+        if !Imgur.imageStorage.contains(where: { $0.name == String(describing: rowIndex) }) {
+            let image = Image(name: String(describing: rowIndex), data: image, isLoad: false)
+            Imgur.imageStorage.append(image)
+        }
+    }
+
+    func post(index: Int) {
+        
+        spinner.startAnimating()
+        let image = Imgur.imageStorage[index]
+        print("MyName on phone:", image.name)
+        
+        Imgur.requestWith(image: image.data, name: image.name) { isLoaded in
+            if isLoaded {
+                //self.spinner.stopAnimating()
+            } else {
+                // setup Alert!
             }
         }
     }
