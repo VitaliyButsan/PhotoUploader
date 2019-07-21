@@ -19,7 +19,6 @@ struct Constants {
     static let sectionBottomIndent: CGFloat = 4.0
 }
 
-
 enum OrientationMode: Int {
     case Portrait = 3
     case Landscape = 5

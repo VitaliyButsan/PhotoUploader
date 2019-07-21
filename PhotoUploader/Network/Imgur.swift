@@ -13,7 +13,7 @@ struct NetConstants {
     static let headerDataName: String = "title"
     static let encodeDataName: String = "image"
     static let encodeMimeType: String = "image/jpg"
-    static let endpoingURL = "https://api.imgur.com/3/image"
+    static let endpoingURL: String = "https://api.imgur.com/3/image"
     static let headers: HTTPHeaders = ["Authorization": "Client-ID 7680907fb2e8211"]
 }
 
@@ -46,8 +46,8 @@ class Imgur {
                         print("MyName on server:", dict["title"] ?? "...no title", "--> Link on server:", dict["link"] ?? "...no link")
                     }
                     //----------------------------------------------------------------------
+                    completionHandler(true)
                 }
-                completionHandler(true)
                 
             case .failure(let encodingError):
                 completionHandler(false)

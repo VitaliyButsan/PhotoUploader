@@ -46,11 +46,11 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         print("MyName on phone:", image.name)
         
         let dispatchGroup = DispatchGroup()
-        //dispatchGroup.enter()
             Imgur.requestWith(image: image.data, name: image.name) { isLoaded in
+                dispatchGroup.enter()
                 if isLoaded {
-                    //self.spinner.stopAnimating()
-                    //dispatchGroup.leave()
+                    self.spinner.stopAnimating()
+                    dispatchGroup.leave()
                 } else {
                     // setup Alert!
                 }
