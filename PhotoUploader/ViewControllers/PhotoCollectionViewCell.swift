@@ -39,21 +39,24 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    // post to server
     func post(index: Int) {
         
         spinner.startAnimating()
         let image = Imgur.imageStorage[index]
         print("MyName on phone:", image.name)
         
-        let dispatchGroup = DispatchGroup()
-            Imgur.requestWith(image: image.data, name: image.name) { isLoaded in
-                dispatchGroup.enter()
-                if isLoaded {
-                    self.spinner.stopAnimating()
-                    dispatchGroup.leave()
-                } else {
+            Imgur.requestWith(image: image.data, name: image.name) { result in
+                guard let receivedName = result else {
                     // setup Alert!
+                    return
                 }
+                
+                if let indexInStorageEqualReceivedName = Imgur.imageStorage.firstIndex(where: { $0.name == receivedName }) {
+                    Imgur.imageStorage[indexInStorageEqualReceivedName].isLoad = true
+                }
+        
+                self.spinner.stopAnimating()
             }
     }
 }

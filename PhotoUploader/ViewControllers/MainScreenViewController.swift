@@ -10,7 +10,9 @@ import UIKit
 import Photos
 
 struct Constants {
-    static let cellIdentifier: String = "Cell"
+    static let storyboardIdentifier: String = "LinksViewController"
+    static let textForLinksVCTitle: String = "Images on server"
+    static let cellIdentifier: String = "PhotoCell"
     static let defaultCount: Int = 0
     static let minCellSpacing: CGFloat = 3.0
     static let defaultSectionLeadingIndent: CGFloat = 4.0
@@ -38,7 +40,6 @@ class MainScreenViewController: UICollectionViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // load images on start application
         photoViewModel.loadImageAssets { (result: PHFetchResult<AnyObject>?) in
             if result != nil {
@@ -51,6 +52,16 @@ class MainScreenViewController: UICollectionViewController {
         }
     }
 
+    @IBAction func linksButtonTapped(_ sender: UIBarButtonItem) {
+        let linksViewController = storyboard?.instantiateViewController(withIdentifier: Constants.storyboardIdentifier) as! LinksViewController
+        
+        if Imgur.imageStorage.contains(where: { $0.isLoad == true }) {
+            linksViewController.mainTitleLabel = Constants.textForLinksVCTitle
+        }
+        navigationController?.present(linksViewController, animated: true, completion: nil)
+    }
+    
+    
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionView.reloadData()
     }
