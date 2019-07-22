@@ -169,16 +169,39 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D5C-Ek-WJw">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="84" width="414" height="812"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </webView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WyW-Cm-E94">
+                                <rect key="frame" x="20" y="54" width="62" height="22"/>
+                                <color key="backgroundColor" red="0.90190070867538452" green="0.90200549364089966" blue="0.90185362100601196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="22" id="1tH-iS-Nxa"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="62" id="GiG-HD-NQX"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
+                                <state key="normal" title="Back">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="11"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="backButtonTapped:" destination="agP-vj-H8x" eventType="touchUpInside" id="Vva-7b-lmG"/>
+                                </connections>
+                            </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="D5C-Ek-WJw" firstAttribute="top" secondItem="7n7-Ku-GGx" secondAttribute="top" id="3RH-Ha-BTQ"/>
-                            <constraint firstItem="7n7-Ku-GGx" firstAttribute="bottom" secondItem="D5C-Ek-WJw" secondAttribute="bottom" id="DmB-La-ihM"/>
+                            <constraint firstItem="D5C-Ek-WJw" firstAttribute="top" secondItem="7n7-Ku-GGx" secondAttribute="top" constant="40" id="3RH-Ha-BTQ"/>
+                            <constraint firstItem="WyW-Cm-E94" firstAttribute="leading" secondItem="7n7-Ku-GGx" secondAttribute="leading" constant="20" id="EhE-tz-2iP"/>
+                            <constraint firstItem="7n7-Ku-GGx" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="WyW-Cm-E94" secondAttribute="trailing" symbolic="YES" id="LWr-kD-aeZ"/>
                             <constraint firstItem="7n7-Ku-GGx" firstAttribute="trailing" secondItem="D5C-Ek-WJw" secondAttribute="trailing" id="Nwg-VY-5ZS"/>
                             <constraint firstItem="D5C-Ek-WJw" firstAttribute="leading" secondItem="7n7-Ku-GGx" secondAttribute="leading" id="Qap-Vc-gv9"/>
+                            <constraint firstItem="WyW-Cm-E94" firstAttribute="top" secondItem="7n7-Ku-GGx" secondAttribute="top" constant="10" id="XXk-fC-aU6"/>
+                            <constraint firstAttribute="bottom" secondItem="D5C-Ek-WJw" secondAttribute="bottom" id="mFZ-0l-ISR"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="7n7-Ku-GGx"/>
                     </view>
