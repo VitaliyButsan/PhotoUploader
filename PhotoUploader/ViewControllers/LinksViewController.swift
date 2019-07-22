@@ -52,25 +52,17 @@ extension LinksViewController: UITableViewDelegate {
 extension LinksViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         if let storedDataDict = UserDefaults.standard.dictionary(forKey: Imgur.Constants.dictStorage) {
             return storedDataDict.count
         } else {
             return 0
         }
-        
-        /*
-         if let storedDataDict = UserDefaults.standard.array(forKey: NetConstants.namesStorage) {
-         return storedDataDict.count
-         } else {
-         return 0
-         }
-         */
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier) as! LinksTableViewCell
         cell.presentLink(forCellIndex: indexPath.row)
+        
         return cell
     }
     
