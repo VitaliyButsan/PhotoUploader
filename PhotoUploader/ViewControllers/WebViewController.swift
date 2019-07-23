@@ -8,10 +8,6 @@
 
 import UIKit
 
-struct WebConstants {
-    static let observerPropertyKeyPath: String = "estimatedProgress"
-}
-
 class WebViewController: UIViewController {
 
     var photoLink: URL?
@@ -21,14 +17,14 @@ class WebViewController: UIViewController {
         super.viewDidLoad()
         request()
     }
-    
-    @IBAction func backButtonTapped(_ sender: UIButton) {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    func request() {
+
+    private func request() {
         guard let url = photoLink else { return }
         let request = URLRequest(url: url)
         webView.loadRequest(request)
+    }
+    
+    @IBAction func backButtonTapped(_ sender: UIButton) {
+        dismiss(animated: true, completion: nil)
     }
 }

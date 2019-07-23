@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import Photos
-import Alamofire
 
 class PhotoCollectionViewCell: UICollectionViewCell {
     

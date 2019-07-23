@@ -10,7 +10,7 @@ import UIKit
 
 class LinksViewController: UIViewController {
     
-    struct Constants {
+    private struct Constants {
         static let cellIdentifier: String = "LinkCellIdentifier"
         static let defaultTitleText: String = "No links yet"
         static let webVCIdentifier: String = "WebViewSegue"
@@ -18,11 +18,11 @@ class LinksViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var titleLabel: UILabel!
-    var mainTitleLabel = Constants.defaultTitleText
+    var mainTitleText: String = Constants.defaultTitleText
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel?.text = mainTitleLabel
+        titleLabel?.text = mainTitleText
         tableView.register(LinksTableViewCell.self, forCellReuseIdentifier: Constants.cellIdentifier)
     }
     
@@ -57,7 +57,7 @@ extension LinksViewController: UITableViewDelegate {
 extension LinksViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let storageCount = Storage.amountStorageLinksAndNames() {
+        if let storageCount = Storage.amountLinksAndNamesStorage() {
             return storageCount
         } else {
             return 0

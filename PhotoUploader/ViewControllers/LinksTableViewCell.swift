@@ -15,7 +15,7 @@ class LinksTableViewCell: UITableViewCell {
         guard let onServerHistory = Storage.readLinksAndNamesStorage() else { return }
         guard let inputHistory = Storage.readSuccessResponsesNamesStorage() else { return }
         
-        // print link
+        // present link
         let nameFromInputHistory = inputHistory[cellIndex]
         let link = onServerHistory[nameFromInputHistory]
         textLabel?.text = link

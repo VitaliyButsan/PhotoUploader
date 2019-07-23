@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Main Screen View Controller-->
+        <!--Gallery on Device-->
         <scene sceneID="UwQ-IA-OM2">
             <objects>
                 <collectionViewController id="pRs-MR-q28" customClass="MainScreenViewController" customModule="PhotoUploader" customModuleProvider="target" sceneMemberID="viewController">
@@ -66,7 +66,7 @@
                             <outlet property="delegate" destination="pRs-MR-q28" id="1aa-6R-IlZ"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="nnm-0V-uTB">
+                    <navigationItem key="navigationItem" title="Gallery on Device" id="nnm-0V-uTB">
                         <barButtonItem key="rightBarButtonItem" title="links" id="QBa-5L-Jew">
                             <connections>
                                 <action selector="linksButtonTapped:" destination="pRs-MR-q28" id="OFE-QZ-b5l"/>

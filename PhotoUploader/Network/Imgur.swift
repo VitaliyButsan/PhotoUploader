@@ -6,7 +6,6 @@
 //  Copyright © 2019 vit. All rights reserved.
 //
 
-import UIKit
 import Alamofire
 
 final class Imgur {
@@ -36,6 +35,7 @@ final class Imgur {
             formData.append(imageData, withName: Constants.encodeDataName, fileName: imageName, mimeType: Constants.encodeMimeType)
             
         }, to: Constants.endpoingURL, headers: Constants.headers) { encodingResult in
+            // response from server
             switch encodingResult {
                 
             case .success(let upload, _, _):
