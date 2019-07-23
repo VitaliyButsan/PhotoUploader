@@ -14,6 +14,7 @@
 		58001DEC22E04F6C00149911 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 58001DEA22E04F6C00149911 /* LaunchScreen.storyboard */; };
 		58001DF922E054C800149911 /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58001DF822E054C800149911 /* PhotoCollectionViewCell.swift */; };
 		58001DFB22E05A1700149911 /* PhotosViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58001DFA22E05A1700149911 /* PhotosViewModel.swift */; };
+		58041BDE22E6F63A00FE19A7 /* Storage API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58041BDD22E6F63A00FE19A7 /* Storage API.swift */; };
 		58FF7A2C22E38C1B003CDCD6 /* Imgur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FF7A2B22E38C1B003CDCD6 /* Imgur.swift */; };
 		58FF7A3222E473AB003CDCD6 /* LinksTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FF7A3122E473AB003CDCD6 /* LinksTableViewCell.swift */; };
 		58FF7A3422E473C4003CDCD6 /* LinksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FF7A3322E473C4003CDCD6 /* LinksViewController.swift */; };
@@ -33,6 +34,7 @@
 		58001DED22E04F6C00149911 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		58001DF822E054C800149911 /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		58001DFA22E05A1700149911 /* PhotosViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewModel.swift; sourceTree = "<group>"; };
+		58041BDD22E6F63A00FE19A7 /* Storage API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Storage API.swift"; sourceTree = "<group>"; };
 		58FF7A2B22E38C1B003CDCD6 /* Imgur.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Imgur.swift; sourceTree = "<group>"; };
 		58FF7A3122E473AB003CDCD6 /* LinksTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinksTableViewCell.swift; sourceTree = "<group>"; };
 		58FF7A3322E473C4003CDCD6 /* LinksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinksViewController.swift; sourceTree = "<group>"; };
@@ -81,10 +83,11 @@
 		58001DE022E04F6A00149911 /* PhotoUploader */ = {
 			isa = PBXGroup;
 			children = (
-				58001DFC22E1C17200149911 /* Network */,
 				58001DF422E050C300149911 /* ViewControllers */,
 				58001DF522E050D000149911 /* Storyboards */,
+				58041BDC22E6F60A00FE19A7 /* StorageModel */,
 				58001DF622E050DA00149911 /* PhotosViewModel */,
+				58001DFC22E1C17200149911 /* Network */,
 				58001DF322E050AA00149911 /* Support files */,
 			);
 			path = PhotoUploader;
@@ -135,6 +138,14 @@
 				58FF7A2B22E38C1B003CDCD6 /* Imgur.swift */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		58041BDC22E6F60A00FE19A7 /* StorageModel */ = {
+			isa = PBXGroup;
+			children = (
+				58041BDD22E6F63A00FE19A7 /* Storage API.swift */,
+			);
+			path = StorageModel;
 			sourceTree = "<group>";
 		};
 		CBC7B34FB5FCD6A455C7A98A /* Pods */ = {
@@ -265,6 +276,7 @@
 				58001DE222E04F6A00149911 /* AppDelegate.swift in Sources */,
 				58001DFB22E05A1700149911 /* PhotosViewModel.swift in Sources */,
 				58001DF922E054C800149911 /* PhotoCollectionViewCell.swift in Sources */,
+				58041BDE22E6F63A00FE19A7 /* Storage API.swift in Sources */,
 				58FF7A2C22E38C1B003CDCD6 /* Imgur.swift in Sources */,
 				58FF7A3422E473C4003CDCD6 /* LinksViewController.swift in Sources */,
 				58FF7A3222E473AB003CDCD6 /* LinksTableViewCell.swift in Sources */,

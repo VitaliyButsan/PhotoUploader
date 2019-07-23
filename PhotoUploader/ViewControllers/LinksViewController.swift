@@ -26,6 +26,11 @@ class LinksViewController: UIViewController {
         tableView.register(LinksTableViewCell.self, forCellReuseIdentifier: Constants.cellIdentifier)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tableView.reloadData()
+    }
+    
     @IBAction func backButtonTapped(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
     }
@@ -52,8 +57,8 @@ extension LinksViewController: UITableViewDelegate {
 extension LinksViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let storedDataDict = UserDefaults.standard.dictionary(forKey: Imgur.Constants.dictStorage) {
-            return storedDataDict.count
+        if let storageCount = Storage.amountStorageLinksAndNames() {
+            return storageCount
         } else {
             return 0
         }

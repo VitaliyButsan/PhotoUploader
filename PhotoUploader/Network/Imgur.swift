@@ -22,9 +22,6 @@ final class Imgur {
         static let dataKey: String = "data"
         static let titleKey: String = "title"
         static let linkKey: String = "link"
-        static let linksStorage: String = "retrievedLinksArray"
-        static let namesStorage: String = "retrievedNamesArray"
-        static let dictStorage: String = "dictStorage"
         static let complete: Notification.Name = Notification.Name.init(rawValue: "complete")
         static let failure: Notification.Name = Notification.Name.init(rawValue: "failure")
     }
@@ -46,29 +43,40 @@ final class Imgur {
                     let json = try? JSONSerialization.jsonObject(with: response.data!, options: .allowFragments) as? [String : Any]
                     //----------------------------------------------------------------------
                     let dictData = json?[Constants.dataKey] as? [String: Any]
-                    guard let dict = dictData else { print("No JSON data!"); return }
-                    guard let name = dict[Constants.titleKey] as? String else { print("No title!"); return }
-                    guard let link = dict[Constants.linkKey] as? String else { print("No link!"); return }
-                    print("MyName on server:", name , "--> Link on server:", link)
+                    
+                    guard let dict = dictData else {
+                        print("No response JSON data!")
+                        responsesAmount += 1
+                        // send complete message
+                        NotificationCenter.default.post(name: Constants.complete, object: nil)
+                        completionHandler(nil, responsesAmount)
+                        return
+                    }
+
+                    guard let link = dict[Constants.linkKey] as? String else {
+                        print("No link on server!")
+                        responsesAmount += 1
+                        // send complete message
+                        NotificationCenter.default.post(name: Constants.complete, object: nil)
+                        completionHandler(nil, responsesAmount)
+                        return
+                    }
+                    
+                    print("MyName on server:", imageName , "--> Link on server:", link)
                     //----------------------------------------------------------------------
                 
                     // save [name : link] to db
-                    if UserDefaults.standard.dictionary(forKey: Constants.dictStorage) == nil {
-                        let dataDictionary: [String:String] = [name : link]
-                        UserDefaults.standard.set(dataDictionary, forKey: Constants.dictStorage)
-                        
-                    } else {
-                        var storageDictionary = UserDefaults.standard.dictionary(forKey: Constants.dictStorage)
-                        storageDictionary?.updateValue(link, forKey: name)
-                        UserDefaults.standard.set(storageDictionary, forKey: Constants.dictStorage)
-                    }
-                    
+                    Storage.writeLinksAndNamesStorage(name: imageName, link: link)
+
+
+                    // send complete message
                     NotificationCenter.default.post(name: Constants.complete, object: nil)
                     responsesAmount += 1
-                    completionHandler(name, responsesAmount)
+                    completionHandler(imageName, responsesAmount)
                 }
                 
             case .failure( _ ):
+                // send failure message
                 NotificationCenter.default.post(name: Constants.failure, object: nil)
                 responsesAmount += 1
                 completionHandler(nil, responsesAmount)

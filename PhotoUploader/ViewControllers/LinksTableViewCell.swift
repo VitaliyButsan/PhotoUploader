@@ -12,8 +12,12 @@ class LinksTableViewCell: UITableViewCell {
 
     func presentLink(forCellIndex cellIndex: Int) {
         // get data from db
-        let storedDataDict = UserDefaults.standard.dictionary(forKey: Imgur.Constants.dictStorage) as! [String:String]
-
-        print(storedDataDict["\(cellIndex)"] ?? "...")
+        guard let onServerHistory = Storage.readLinksAndNamesStorage() else { return }
+        guard let inputHistory = Storage.readSuccessResponsesNamesStorage() else { return }
+        
+        // print link
+        let nameFromInputHistory = inputHistory[cellIndex]
+        let link = onServerHistory[nameFromInputHistory]
+        textLabel?.text = link
     }
 }

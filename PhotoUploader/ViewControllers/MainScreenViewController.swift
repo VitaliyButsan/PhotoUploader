@@ -9,18 +9,17 @@
 import UIKit
 import Photos
 
-
 class MainScreenViewController: UICollectionViewController {
     
-
     struct Constants {
-        static let successResponsesStorageKey: String = "successResponsesNamesStorage"
         static let storyboardIdentifier: String = "LinksViewController"
         static let textForLinksVCTitle: String = "Images on server"
         static let cellIdentifier: String = "PhotoCell"
         static let alertTitle: String = "ERROR!"
         static let alertMessage: String = "don't loaded on server. Try later"
         static let alertButtonTitle: String = "Ok"
+        static let complete: Notification.Name = Notification.Name.init("complete")
+        static let failure: Notification.Name = Notification.Name.init("failure")
         static let defaultCount: Int = 0
         static let minCellSpacing: CGFloat = 3.0
         static let defaultSectionLeadingIndent: CGFloat = 4.0
@@ -35,9 +34,8 @@ class MainScreenViewController: UICollectionViewController {
     }
     
     struct Variables {
-        static var lastLoadIsComplete: Bool = true
-        static var successResponsesAmount: Int = 0
-        static var loadedNames: [String] = []
+        static var lastLoadsComplete: Bool = true
+        static var responsesAmount: Int = 0
         static var bufferOfIndices: [Int] = []
         static var numberOfCells: Int = OrientationMode.Portrait.rawValue
         static var numberOfCellsSpacings: Int = OrientationMode.Portrait.rawValue
@@ -51,8 +49,8 @@ class MainScreenViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.photoViewModelDelegate = PhotosViewModel()
-        NotificationCenter.default.addObserver(self, selector: #selector(makeRequest), name: Notification.Name.init(rawValue: "complete"), object: nil)
-        /// TO_DO: REMOVE OBSERVERS!!!
+        NotificationCenter.default.addObserver(self, selector: #selector(makeRequest), name: Constants.complete, object: nil)
+
         // load images on start application
         photoViewModelDelegate?.loadImagesAssets() { _ in
             DispatchQueue.main.async {
@@ -64,14 +62,12 @@ class MainScreenViewController: UICollectionViewController {
     @IBAction func linksButtonTapped(_ sender: UIBarButtonItem) {
         let linksViewController = storyboard?.instantiateViewController(withIdentifier: Constants.storyboardIdentifier) as! LinksViewController
         // if db exist, change title of LinksVC
-        if let dict = UserDefaults.standard.dictionary(forKey: Imgur.Constants.dictStorage), dict.count > 0 {
+        if Storage.linksAndNamesStorageIsExist() {
             linksViewController.mainTitleLabel = Constants.textForLinksVCTitle
         }
         
-        UserDefaults.standard.set(Variables.loadedNames, forKey: Constants.successResponsesStorageKey)
         navigationController?.present(linksViewController, animated: true, completion: nil)
     }
-    
     
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionView.reloadData()
@@ -106,7 +102,10 @@ class MainScreenViewController: UICollectionViewController {
                                  right: Variables.sectionTrailingIndent)
         return inset
     }
-
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 }
 
 
@@ -122,42 +121,80 @@ extension MainScreenViewController {
         }
         
         Variables.bufferOfIndices.append(indexPath.row)
-        let image = self.photoViewModelDelegate?.getImage(index: indexPath.row)
-        let name = self.photoViewModelDelegate?.getId(index: indexPath.row)
+        guard let image = self.photoViewModelDelegate?.getImage(index: indexPath.row) else { return }
+        guard let name = self.photoViewModelDelegate?.getId(index: indexPath.row) else { return }
         
-        if Variables.lastLoadIsComplete {
-            Variables.lastLoadIsComplete = false
+        if Variables.lastLoadsComplete {
+            Variables.lastLoadsComplete = false
             
-            Imgur.requestWith(image: image!, name: String(name!)) { (responseName, responsesAmount) in
-                guard let name = responseName else { return }
-                Variables.loadedNames.append(name)
-                Variables.successResponsesAmount = responsesAmount
+            Imgur.requestWith(image: image, name: String(name)) { (responseName, responsesAmount) in
+                guard let retrievedName = responseName else {
+                    // remove spinner
+                    self.photoViewModelDelegate?.changeImageIsLoading(index: name, isLoading: false)
+                    let tempIndexPath = IndexPath(row: name, section: indexPath.section)
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadItems(at: [tempIndexPath])
+                    }
+                    Variables.responsesAmount = responsesAmount
+                    return
+                }
+                
+                // write result to db
+                Storage.writeToSuccessResponsesNamesStorage(name: retrievedName)
+                Variables.responsesAmount = responsesAmount
                 
                 if responsesAmount == Variables.bufferOfIndices.count {
-                    Variables.lastLoadIsComplete = true
+                    Variables.lastLoadsComplete = true
+                }
+                
+                // remove spinner
+                self.photoViewModelDelegate?.changeImageIsLoading(index: name, isLoading: false)
+                let tempIndexPath = IndexPath(row: name, section: indexPath.section)
+                DispatchQueue.main.async {
+                    self.collectionView.reloadItems(at: [tempIndexPath])
                 }
             }
         }
     }
     
+    // to continue make requests by notifications
     @objc func makeRequest(_ notification: Notification) {
         
-        if notification.name.rawValue == "complete", Variables.successResponsesAmount < Variables.bufferOfIndices.count - 1 {
-            // STOP spinner, for this change "isLoading" state of loaded image, and reloadData()
-            let indexForNextRequest = Variables.bufferOfIndices[Variables.successResponsesAmount + 1]
-            let image = self.photoViewModelDelegate?.getImage(index: indexForNextRequest)
-            let name = self.photoViewModelDelegate?.getId(index: indexForNextRequest)
+        if notification.name == Constants.complete, Variables.responsesAmount < Variables.bufferOfIndices.count - 1 {
             
-            Imgur.requestWith(image: image!, name: String(name!)) { (responseName, responsesAmount) in
-                guard let name = responseName else { return }
-                Variables.loadedNames.append(name)
-                Variables.successResponsesAmount = responsesAmount
+            let indexForNextRequest = Variables.bufferOfIndices[Variables.responsesAmount + 1]
+            guard let image = self.photoViewModelDelegate?.getImage(index: indexForNextRequest) else { return }
+            guard let name = self.photoViewModelDelegate?.getId(index: indexForNextRequest) else { return }
+
+            Imgur.requestWith(image: image, name: String(name)) { (responseName, responsesAmount) in
+                guard let retrievedName = responseName else {
+                    // remove spinner
+                    self.photoViewModelDelegate?.changeImageIsLoading(index: Int(name), isLoading: false)
+                    let tempIndexPath = IndexPath(row: Int(name), section: 0)
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadItems(at: [tempIndexPath])
+                    }
+                    Variables.responsesAmount = responsesAmount
+                    return
+                }
+                
+                // write result to db
+                Storage.writeToSuccessResponsesNamesStorage(name: retrievedName)
+                Variables.responsesAmount = responsesAmount
                 
                 if responsesAmount == Variables.bufferOfIndices.count {
-                    Variables.lastLoadIsComplete = true
+                    Variables.lastLoadsComplete = true
+                }
+                
+                // remove spinner
+                self.photoViewModelDelegate?.changeImageIsLoading(index: Int(name), isLoading: false)
+                let tempIndexPath = IndexPath(row: Int(name), section: 0)
+                DispatchQueue.main.async {
+                    self.collectionView.reloadItems(at: [tempIndexPath])
                 }
             }
-        } else if notification.name.rawValue == "failure" {
+            
+        } else if notification.name == Constants.failure {
             alertHandler(withTitle: Constants.alertTitle, withMessage: Constants.alertMessage, titleForActionButton: Constants.alertButtonTitle)
         }
     }
