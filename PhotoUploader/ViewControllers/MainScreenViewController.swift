@@ -11,12 +11,12 @@ import Photos
 
 class MainScreenViewController: UICollectionViewController {
     
-    struct Constants {
+    private struct Constants {
         static let storyboardIdentifier: String = "LinksViewController"
         static let textForLinksVCTitle: String = "Images on server"
         static let cellIdentifier: String = "PhotoCell"
-        static let alertTitle: String = "ERROR!"
-        static let alertMessage: String = "don't loaded on server. Try later"
+        static let alertTitle: String = "Something wrong!"
+        static let alertMessage: String = "Image don't loaded on server. Try later"
         static let alertButtonTitle: String = "Ok"
         static let complete: Notification.Name = Notification.Name.init("complete")
         static let failure: Notification.Name = Notification.Name.init("failure")
@@ -33,7 +33,7 @@ class MainScreenViewController: UICollectionViewController {
         case Landscape = 5
     }
     
-    struct Variables {
+    private struct Variables {
         static var lastLoadsComplete: Bool = true
         static var responsesAmount: Int = 0
         static var bufferOfIndices: [Int] = []
@@ -44,7 +44,7 @@ class MainScreenViewController: UICollectionViewController {
         static var sectionLeadingTrailingIndent: CGFloat = Constants.defaultSectionLeadingIndent + Constants.defaultSectionTrailingIndent
     }
     
-    var photoViewModelDelegate: PhotoViewModelProtocol?
+    private var photoViewModelDelegate: PhotoViewModelProtocol?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -135,6 +135,8 @@ extension MainScreenViewController {
                     DispatchQueue.main.async {
                         self.collectionView.reloadItems(at: [tempIndexPath])
                     }
+                    // call alert
+                    self.alertHandler(withTitle: Constants.alertTitle, withMessage: Constants.alertMessage, titleForActionButton: Constants.alertButtonTitle)
                     Variables.responsesAmount = responsesAmount
                     return
                 }
@@ -143,6 +145,7 @@ extension MainScreenViewController {
                 Storage.writeToSuccessResponsesNamesStorage(name: retrievedName)
                 Variables.responsesAmount = responsesAmount
                 
+                // check completion of all requests
                 if responsesAmount == Variables.bufferOfIndices.count {
                     Variables.lastLoadsComplete = true
                 }
@@ -174,6 +177,7 @@ extension MainScreenViewController {
                     DispatchQueue.main.async {
                         self.collectionView.reloadItems(at: [tempIndexPath])
                     }
+                    // check completion of all requests
                     Variables.responsesAmount = responsesAmount
                     return
                 }
@@ -199,7 +203,7 @@ extension MainScreenViewController {
         }
     }
     
-    func alertHandler(withTitle title: String, withMessage message: String, titleForActionButton titleOfButton: String) {
+    private func alertHandler(withTitle title: String, withMessage message: String, titleForActionButton titleOfButton: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let alertAction = UIAlertAction(title: titleOfButton, style: .default, handler: nil)
         alert.addAction(alertAction)

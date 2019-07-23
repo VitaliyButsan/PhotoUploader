@@ -11,7 +11,7 @@ import Alamofire
 
 final class Imgur {
     
-    struct Constants {
+    private struct Constants {
         static let compressionQuality: CGFloat = 1.0
         static let headerDataName: String = "title"
         static let encodeDataName: String = "image"
@@ -26,7 +26,7 @@ final class Imgur {
         static let failure: Notification.Name = Notification.Name.init(rawValue: "failure")
     }
     
-    static var responsesAmount: Int = 0
+    private static var responsesAmount: Int = 0
     
     static func requestWith(image: UIImage, name imageName: String, completionHandler: @escaping (String?, Int) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: Constants.compressionQuality) else { return }

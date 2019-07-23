@@ -10,7 +10,7 @@ import Foundation
 
 final class Storage {
     
-    struct Constants {
+    private struct Constants {
         static let dictStorage: String = "linksAndNamesStorage"
         static let successResponsesNamesStorage: String = "successResponsesNamesStorage"
         static let serialPrivateQueue = DispatchQueue(label: "com.serialQueue", qos: .utility)
