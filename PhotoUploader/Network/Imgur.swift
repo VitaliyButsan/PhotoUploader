@@ -6,12 +6,11 @@
 //  Copyright © 2019 vit. All rights reserved.
 //
 
-import UIKit
 import Alamofire
 
 final class Imgur {
     
-    struct Constants {
+    private struct Constants {
         static let compressionQuality: CGFloat = 1.0
         static let headerDataName: String = "title"
         static let encodeDataName: String = "image"
@@ -26,7 +25,7 @@ final class Imgur {
         static let failure: Notification.Name = Notification.Name.init(rawValue: "failure")
     }
     
-    static var responsesAmount: Int = 0
+    private static var responsesAmount: Int = 0
     
     static func requestWith(image: UIImage, name imageName: String, completionHandler: @escaping (String?, Int) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: Constants.compressionQuality) else { return }
@@ -36,6 +35,7 @@ final class Imgur {
             formData.append(imageData, withName: Constants.encodeDataName, fileName: imageName, mimeType: Constants.encodeMimeType)
             
         }, to: Constants.endpoingURL, headers: Constants.headers) { encodingResult in
+            // response from server
             switch encodingResult {
                 
             case .success(let upload, _, _):

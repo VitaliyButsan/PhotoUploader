@@ -31,7 +31,7 @@ class PhotosViewModel: PhotoViewModelProtocol {
     
     private var arrImageData: [ImageData] = []
     
-    private func getAssetThembnail(asset: PHAsset) -> UIImage {
+    private func getAssetThumbnail(asset: PHAsset) -> UIImage {
         let manager = PHImageManager.default()
         let option = PHImageRequestOptions()
         var thumbnail = UIImage()
@@ -48,14 +48,12 @@ class PhotosViewModel: PhotoViewModelProtocol {
     func loadImagesAssets(completion: @escaping (Bool) -> Void) {
         PHPhotoLibrary.requestAuthorization { (authStatus: PHAuthorizationStatus) in
             if authStatus == PHAuthorizationStatus.authorized {
-                let fetchResult = PHAsset.fetchAssets(with: .image, options: nil) as? PHFetchResult<AnyObject>
-                var quantityImages = fetchResult?.count
-                var wolker = 0
-                while quantityImages ?? 0 > 0 {
-                    if let asset = fetchResult?[wolker] as? PHAsset {
-                        self.arrImageData.append(ImageData(image: self.getAssetThembnail(asset: asset), id: wolker, isLoading: false))
-                        quantityImages! -= 1
-                        wolker += 1
+                guard let fetchResult = PHAsset.fetchAssets(with: .image, options: nil) as? PHFetchResult<AnyObject> else { return }
+                var walker = 0
+                while walker <= fetchResult.count - 1 {
+                    if let asset = fetchResult[walker] as? PHAsset {
+                        self.arrImageData.append(ImageData(image: self.getAssetThumbnail(asset: asset), id: walker, isLoading: false))
+                        walker += 1
                     }
                 }
                 completion(true)

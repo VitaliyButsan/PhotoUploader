@@ -9,9 +9,9 @@
 import Foundation
 
 final class Storage {
-    
-    struct Constants {
-        static let dictStorage: String = "linksAndNamesStorage"
+   
+    private struct Constants {
+        static let linksAndNamesStorage: String = "linksAndNamesStorage"
         static let successResponsesNamesStorage: String = "successResponsesNamesStorage"
         static let serialPrivateQueue = DispatchQueue(label: "com.serialQueue", qos: .utility)
     }
@@ -43,16 +43,18 @@ final class Storage {
                 UserDefaults.standard.set(newNamesArr, forKey: Constants.successResponsesNamesStorage)
             } else {
                 var names = readSuccessResponsesNamesStorage()!
-                names.append(name)
-                UserDefaults.standard.set(names, forKey: Constants.successResponsesNamesStorage)
+                // check only unique values
+                if names.contains(where: { $0 == name }) == false {
+                    names.append(name)
+                    UserDefaults.standard.set(names, forKey: Constants.successResponsesNamesStorage)
+                }
             }
         }
     }
     
     // check "linksAndNames" db existence
     static func linksAndNamesStorageIsExist() -> Bool {
-        
-        if UserDefaults.standard.dictionary(forKey: Constants.dictStorage) != nil {
+        if UserDefaults.standard.dictionary(forKey: Constants.linksAndNamesStorage) != nil {
             return true
         } else {
             return false
@@ -61,9 +63,8 @@ final class Storage {
     
     // reaad "linksAndNames" db
     static func readLinksAndNamesStorage() -> [String:String]? {
-        
         if linksAndNamesStorageIsExist() {
-            return UserDefaults.standard.dictionary(forKey: Constants.dictStorage) as? [String : String]
+            return UserDefaults.standard.dictionary(forKey: Constants.linksAndNamesStorage) as? [String : String]
         } else {
             return nil
         }
@@ -74,19 +75,19 @@ final class Storage {
         Constants.serialPrivateQueue.async {
             if !linksAndNamesStorageIsExist() {
                 let newDataDictionary: [String:String] = [name : link]
-                UserDefaults.standard.set(newDataDictionary, forKey: Constants.dictStorage)
+                UserDefaults.standard.set(newDataDictionary, forKey: Constants.linksAndNamesStorage)
             } else {
-                var existingStorageDictionary = UserDefaults.standard.dictionary(forKey: Constants.dictStorage)
+                var existingStorageDictionary = UserDefaults.standard.dictionary(forKey: Constants.linksAndNamesStorage)
                 existingStorageDictionary?.updateValue(link, forKey: name)
-                UserDefaults.standard.set(existingStorageDictionary, forKey: Constants.dictStorage)
+                UserDefaults.standard.set(existingStorageDictionary, forKey: Constants.linksAndNamesStorage)
             }
         }
     }
     
-    static func amountStorageLinksAndNames() -> Int? {
-        
+    // quantity of linksNames storage elements
+    static func amountLinksAndNamesStorage() -> Int? {
         if linksAndNamesStorageIsExist() {
-            let dict = UserDefaults.standard.dictionary(forKey: Constants.dictStorage) as! [String : String]
+            let dict = UserDefaults.standard.dictionary(forKey: Constants.linksAndNamesStorage) as! [String : String]
             return dict.count
         } else {
             return nil
