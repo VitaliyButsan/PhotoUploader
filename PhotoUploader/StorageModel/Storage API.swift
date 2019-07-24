@@ -43,8 +43,11 @@ final class Storage {
                 UserDefaults.standard.set(newNamesArr, forKey: Constants.successResponsesNamesStorage)
             } else {
                 var names = readSuccessResponsesNamesStorage()!
-                names.append(name)
-                UserDefaults.standard.set(names, forKey: Constants.successResponsesNamesStorage)
+                // check only unique values
+                if names.contains(where: { $0 == name }) == false {
+                    names.append(name)
+                    UserDefaults.standard.set(names, forKey: Constants.successResponsesNamesStorage)
+                }
             }
         }
     }
@@ -81,6 +84,7 @@ final class Storage {
         }
     }
     
+    // quantity of linksNames storage elements
     static func amountLinksAndNamesStorage() -> Int? {
         if linksAndNamesStorageIsExist() {
             let dict = UserDefaults.standard.dictionary(forKey: Constants.linksAndNamesStorage) as! [String : String]
