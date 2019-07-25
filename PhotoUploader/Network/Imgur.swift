@@ -27,6 +27,12 @@ final class Imgur {
     
     private static var responsesAmount: Int = 0
     
+    /**
+     For networking uploads.
+     - parameter image: Image for request.
+     - parameter name: Image name for request.
+     - parameter completionHandler: A closure, that get a responce.
+     */
     static func requestWith(image: UIImage, name imageName: String, completionHandler: @escaping (String?, Int) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: Constants.compressionQuality) else { return }
 

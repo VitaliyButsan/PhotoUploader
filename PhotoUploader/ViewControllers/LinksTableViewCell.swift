@@ -18,6 +18,7 @@ class LinksTableViewCell: UITableViewCell {
         // present link
         let nameFromInputHistory = inputHistory[cellIndex]
         let link = onServerHistory[nameFromInputHistory]
+        textLabel?.textColor = .blue
         textLabel?.text = link
     }
 }

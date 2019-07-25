@@ -174,7 +174,7 @@
                             </webView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WyW-Cm-E94">
                                 <rect key="frame" x="20" y="54" width="62" height="22"/>
-                                <color key="backgroundColor" red="0.90190070867538452" green="0.90200549364089966" blue="0.90185362100601196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="1tH-iS-Nxa"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="62" id="GiG-HD-NQX"/>
